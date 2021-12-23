@@ -19,6 +19,7 @@ public class Application {
         logConfig.configureLogLevels();
         int port = Integer.parseInt(System.getProperty("application.port", "8080"));
         port(port);
+        init();
         // TODO
         LOG.info("Hello world!");
     }
