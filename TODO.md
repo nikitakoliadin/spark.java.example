@@ -1,8 +1,5 @@
 # TODO
 
-* Server
-* Thread pool
-* Waiting for initialization
 * Controllers
 * Services
 * Filters
