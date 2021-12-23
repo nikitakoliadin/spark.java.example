@@ -40,6 +40,9 @@
 
         <!-- Server -->
         <server.spark-core.version>2.9.3</server.spark-core.version>
+
+        <!-- JSON -->
+        <json.jackson.version>2.13.1</json.jackson.version>
     </properties>
 
     <build>
@@ -131,6 +134,28 @@
             <groupId>com.sparkjava</groupId>
             <artifactId>spark-core</artifactId>
             <version>${server.spark-core.version}</version>
+        </dependency>
+
+        <!-- JSON -->
+        <!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>${json.jackson.version}</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-core -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-core</artifactId>
+            <version>${json.jackson.version}</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-annotations -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-annotations</artifactId>
+            <version>${json.jackson.version}</version>
         </dependency>
     </dependencies>
 </project>
