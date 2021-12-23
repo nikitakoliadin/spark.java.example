@@ -6,6 +6,8 @@ import com.qthegamep.spark.java.example.exception.ApplicationConfigInitializatio
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import static spark.Spark.*;
+
 public class Application {
 
     private static final Logger LOG = LoggerFactory.getLogger(Application.class);
@@ -15,6 +17,8 @@ public class Application {
         applicationConfig.init();
         LogConfig logConfig = new LogConfig();
         logConfig.configureLogLevels();
+        int port = Integer.parseInt(System.getProperty("application.port", "8080"));
+        port(port);
         // TODO
         LOG.info("Hello world!");
     }
