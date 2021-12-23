@@ -24,7 +24,7 @@ public class Application {
         int idleTimeout = Integer.parseInt(System.getProperty("application.server.idle.timeout"));
         threadPool(maxThreads, minThreads, idleTimeout);
         init();
-        // TODO
-        LOG.info("Hello world!");
+        awaitInitialization();
+        LOG.info("Application started");
     }
 }
