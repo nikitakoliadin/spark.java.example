@@ -37,6 +37,9 @@
         <log.logback-json-classic.version>0.1.5</log.logback-json-classic.version>
         <log.logback-gelf.version>2.0.0</log.logback-gelf.version>
         <log.logstash-logback-encoder.version>5.3</log.logstash-logback-encoder.version>
+
+        <!-- Server -->
+        <server.spark-core.version>2.9.3</server.spark-core.version>
     </properties>
 
     <build>
@@ -120,6 +123,14 @@
             <groupId>net.logstash.logback</groupId>
             <artifactId>logstash-logback-encoder</artifactId>
             <version>${log.logstash-logback-encoder.version}</version>
+        </dependency>
+
+        <!-- Server -->
+        <!-- https://mvnrepository.com/artifact/com.sparkjava/spark-core -->
+        <dependency>
+            <groupId>com.sparkjava</groupId>
+            <artifactId>spark-core</artifactId>
+            <version>${server.spark-core.version}</version>
         </dependency>
     </dependencies>
 </project>
