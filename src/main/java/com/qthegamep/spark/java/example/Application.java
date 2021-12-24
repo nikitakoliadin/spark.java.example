@@ -12,6 +12,8 @@ import com.qthegamep.spark.java.example.controller.SuccessControllerImpl;
 import com.qthegamep.spark.java.example.exception.ApplicationConfigInitializationException;
 import com.qthegamep.spark.java.example.service.ConverterService;
 import com.qthegamep.spark.java.example.service.ConverterServiceImpl;
+import com.qthegamep.spark.java.example.service.GenerationService;
+import com.qthegamep.spark.java.example.service.GenerationServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -26,6 +28,7 @@ public class Application {
         applicationConfig.init();
         LogConfig logConfig = new LogConfig();
         logConfig.configureLogLevels();
+        GenerationService generationService = buildGenerationService();
         ObjectMapper objectMapper = buildObjectMapper();
         ConverterService converterService = buildConverterService(objectMapper);
         SuccessController successController = buildSuccessController(converterService);
@@ -40,6 +43,10 @@ public class Application {
         successController.initSuccessController();
         Runtime.getRuntime().addShutdownHook(new ShutdownHookConfig());
         LOG.info("Application started");
+    }
+
+    private static GenerationService buildGenerationService() {
+        return new GenerationServiceImpl();
     }
 
     private static ObjectMapper buildObjectMapper() {
