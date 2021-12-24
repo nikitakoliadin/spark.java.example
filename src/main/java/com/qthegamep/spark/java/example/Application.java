@@ -10,10 +10,7 @@ import com.qthegamep.spark.java.example.config.ShutdownHookConfig;
 import com.qthegamep.spark.java.example.controller.SuccessController;
 import com.qthegamep.spark.java.example.controller.SuccessControllerImpl;
 import com.qthegamep.spark.java.example.exception.ApplicationConfigInitializationException;
-import com.qthegamep.spark.java.example.filter.RequestIdRequestFilter;
-import com.qthegamep.spark.java.example.filter.RequestIdRequestFilterImpl;
-import com.qthegamep.spark.java.example.filter.RequestIdResponseFilter;
-import com.qthegamep.spark.java.example.filter.RequestIdResponseFilterImpl;
+import com.qthegamep.spark.java.example.filter.*;
 import com.qthegamep.spark.java.example.service.ConverterService;
 import com.qthegamep.spark.java.example.service.ConverterServiceImpl;
 import com.qthegamep.spark.java.example.service.GenerationService;
@@ -36,6 +33,7 @@ public class Application {
         ObjectMapper objectMapper = buildObjectMapper();
         ConverterService converterService = buildConverterService(objectMapper);
         RequestIdRequestFilter requestIdRequestFilter = buildRequestIdRequestFilter(generationService);
+        DurationRequestFilter durationRequestFilter = buildDurationRequestFilter();
         RequestIdResponseFilter requestIdResponseFilter = buildRequestIdResponseFilter();
         SuccessController successController = buildSuccessController(converterService);
         int port = Integer.parseInt(System.getProperty("application.port", "8080"));
@@ -47,6 +45,7 @@ public class Application {
         init();
         awaitInitialization();
         requestIdRequestFilter.initRequestIdRequestFilter();
+        durationRequestFilter.initDurationRequestFilter();
         requestIdResponseFilter.initRequestIdResponseFilter();
         successController.initSuccessController();
         Runtime.getRuntime().addShutdownHook(new ShutdownHookConfig());
@@ -70,6 +69,10 @@ public class Application {
 
     private static RequestIdRequestFilter buildRequestIdRequestFilter(GenerationService generationService) {
         return new RequestIdRequestFilterImpl(generationService);
+    }
+
+    private static DurationRequestFilter buildDurationRequestFilter() {
+        return new DurationRequestFilterImpl();
     }
 
     private static RequestIdResponseFilter buildRequestIdResponseFilter() {
