@@ -10,6 +10,8 @@ import com.qthegamep.spark.java.example.config.ShutdownHookConfig;
 import com.qthegamep.spark.java.example.controller.SuccessController;
 import com.qthegamep.spark.java.example.controller.SuccessControllerImpl;
 import com.qthegamep.spark.java.example.exception.ApplicationConfigInitializationException;
+import com.qthegamep.spark.java.example.filter.RequestIdRequestFilter;
+import com.qthegamep.spark.java.example.filter.RequestIdRequestFilterImpl;
 import com.qthegamep.spark.java.example.service.ConverterService;
 import com.qthegamep.spark.java.example.service.ConverterServiceImpl;
 import com.qthegamep.spark.java.example.service.GenerationService;
@@ -31,6 +33,7 @@ public class Application {
         GenerationService generationService = buildGenerationService();
         ObjectMapper objectMapper = buildObjectMapper();
         ConverterService converterService = buildConverterService(objectMapper);
+        RequestIdRequestFilter requestIdRequestFilter = buildRequestIdRequestFilter(generationService);
         SuccessController successController = buildSuccessController(converterService);
         int port = Integer.parseInt(System.getProperty("application.port", "8080"));
         port(port);
@@ -40,6 +43,7 @@ public class Application {
         threadPool(maxThreads, minThreads, idleTimeout);
         init();
         awaitInitialization();
+        requestIdRequestFilter.initRequestIdRequestFilter();
         successController.initSuccessController();
         Runtime.getRuntime().addShutdownHook(new ShutdownHookConfig());
         LOG.info("Application started");
@@ -58,6 +62,10 @@ public class Application {
 
     private static ConverterService buildConverterService(ObjectMapper objectMapper) {
         return new ConverterServiceImpl(objectMapper);
+    }
+
+    private static RequestIdRequestFilter buildRequestIdRequestFilter(GenerationService generationService) {
+        return new RequestIdRequestFilterImpl(generationService);
     }
 
     private static SuccessController buildSuccessController(ConverterService converterService) {
