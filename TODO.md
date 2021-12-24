@@ -1,7 +1,6 @@
 # TODO
 
 * Controllers
-* Services
 * Filters
 * Error handling
 * Exception mapping
