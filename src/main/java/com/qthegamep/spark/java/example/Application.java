@@ -11,10 +11,7 @@ import com.qthegamep.spark.java.example.controller.SuccessController;
 import com.qthegamep.spark.java.example.controller.SuccessControllerImpl;
 import com.qthegamep.spark.java.example.exception.ApplicationConfigInitializationException;
 import com.qthegamep.spark.java.example.filter.*;
-import com.qthegamep.spark.java.example.service.ConverterService;
-import com.qthegamep.spark.java.example.service.ConverterServiceImpl;
-import com.qthegamep.spark.java.example.service.GenerationService;
-import com.qthegamep.spark.java.example.service.GenerationServiceImpl;
+import com.qthegamep.spark.java.example.service.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -31,13 +28,14 @@ public class Application {
         logConfig.configureLogLevels();
         GenerationService generationService = buildGenerationService();
         ObjectMapper objectMapper = buildObjectMapper();
+        SuccessService successService = buildSuccessService();
         ConverterService converterService = buildConverterService(objectMapper);
         RequestIdRequestFilter requestIdRequestFilter = buildRequestIdRequestFilter(generationService);
         DurationRequestFilter durationRequestFilter = buildDurationRequestFilter();
         RequestIdResponseFilter requestIdResponseFilter = buildRequestIdResponseFilter();
         DurationResponseFilter durationResponseFilter = buildDurationResponseFilter();
         ResponseLogFilter responseLogFilter = buildResponseLogFilter();
-        SuccessController successController = buildSuccessController(converterService);
+        SuccessController successController = buildSuccessController(successService, converterService);
         int port = Integer.parseInt(System.getProperty("application.port", "8080"));
         port(port);
         int maxThreads = Integer.parseInt(System.getProperty("application.server.max.threads"));
@@ -67,6 +65,10 @@ public class Application {
                 .registerModule(new IsoDateJsonModuleAdapter().buildModule());
     }
 
+    private static SuccessService buildSuccessService() {
+        return new SuccessServiceImpl();
+    }
+
     private static ConverterService buildConverterService(ObjectMapper objectMapper) {
         return new ConverterServiceImpl(objectMapper);
     }
@@ -91,7 +93,10 @@ public class Application {
         return new ResponseLogFilterImpl();
     }
 
-    private static SuccessController buildSuccessController(ConverterService converterService) {
-        return new SuccessControllerImpl(converterService);
+    private static SuccessController buildSuccessController(SuccessService successService,
+                                                            ConverterService converterService) {
+        return new SuccessControllerImpl(
+                successService,
+                converterService);
     }
 }
