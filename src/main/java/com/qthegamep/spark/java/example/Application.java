@@ -28,6 +28,7 @@ public class Application {
         logConfig.configureLogLevels();
         ObjectMapper objectMapper = buildObjectMapper();
         ConverterService converterService = buildConverterService(objectMapper);
+        SuccessController successController = buildSuccessController(converterService);
         int port = Integer.parseInt(System.getProperty("application.port", "8080"));
         port(port);
         int maxThreads = Integer.parseInt(System.getProperty("application.server.max.threads"));
@@ -36,7 +37,6 @@ public class Application {
         threadPool(maxThreads, minThreads, idleTimeout);
         init();
         awaitInitialization();
-        SuccessController successController = new SuccessControllerImpl();
         successController.initSuccessController();
         Runtime.getRuntime().addShutdownHook(new ShutdownHookConfig());
         LOG.info("Application started");
@@ -51,5 +51,9 @@ public class Application {
 
     private static ConverterService buildConverterService(ObjectMapper objectMapper) {
         return new ConverterServiceImpl(objectMapper);
+    }
+
+    private static SuccessController buildSuccessController(ConverterService converterService) {
+        return new SuccessControllerImpl(converterService);
     }
 }
