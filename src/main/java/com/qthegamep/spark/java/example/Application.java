@@ -12,6 +12,8 @@ import com.qthegamep.spark.java.example.controller.SuccessControllerImpl;
 import com.qthegamep.spark.java.example.exception.ApplicationConfigInitializationException;
 import com.qthegamep.spark.java.example.filter.RequestIdRequestFilter;
 import com.qthegamep.spark.java.example.filter.RequestIdRequestFilterImpl;
+import com.qthegamep.spark.java.example.filter.RequestIdResponseFilter;
+import com.qthegamep.spark.java.example.filter.RequestIdResponseFilterImpl;
 import com.qthegamep.spark.java.example.service.ConverterService;
 import com.qthegamep.spark.java.example.service.ConverterServiceImpl;
 import com.qthegamep.spark.java.example.service.GenerationService;
@@ -34,6 +36,7 @@ public class Application {
         ObjectMapper objectMapper = buildObjectMapper();
         ConverterService converterService = buildConverterService(objectMapper);
         RequestIdRequestFilter requestIdRequestFilter = buildRequestIdRequestFilter(generationService);
+        RequestIdResponseFilter requestIdResponseFilter = buildRequestIdResponseFilter();
         SuccessController successController = buildSuccessController(converterService);
         int port = Integer.parseInt(System.getProperty("application.port", "8080"));
         port(port);
@@ -44,6 +47,7 @@ public class Application {
         init();
         awaitInitialization();
         requestIdRequestFilter.initRequestIdRequestFilter();
+        requestIdResponseFilter.initRequestIdResponseFilter();
         successController.initSuccessController();
         Runtime.getRuntime().addShutdownHook(new ShutdownHookConfig());
         LOG.info("Application started");
@@ -66,6 +70,10 @@ public class Application {
 
     private static RequestIdRequestFilter buildRequestIdRequestFilter(GenerationService generationService) {
         return new RequestIdRequestFilterImpl(generationService);
+    }
+
+    private static RequestIdResponseFilter buildRequestIdResponseFilter() {
+        return new RequestIdResponseFilterImpl();
     }
 
     private static SuccessController buildSuccessController(ConverterService converterService) {
