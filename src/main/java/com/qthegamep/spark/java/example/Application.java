@@ -7,6 +7,8 @@ import com.qthegamep.spark.java.example.adapter.IsoDateJsonModuleAdapter;
 import com.qthegamep.spark.java.example.config.ApplicationConfig;
 import com.qthegamep.spark.java.example.config.LogConfig;
 import com.qthegamep.spark.java.example.config.ShutdownHookConfig;
+import com.qthegamep.spark.java.example.controller.FailureController;
+import com.qthegamep.spark.java.example.controller.FailureControllerImpl;
 import com.qthegamep.spark.java.example.controller.SuccessController;
 import com.qthegamep.spark.java.example.controller.SuccessControllerImpl;
 import com.qthegamep.spark.java.example.exception.ApplicationConfigInitializationException;
@@ -29,6 +31,7 @@ public class Application {
         GenerationService generationService = buildGenerationService();
         ObjectMapper objectMapper = buildObjectMapper();
         SuccessService successService = buildSuccessService();
+        FailureService failureService = buildFailureService();
         ConverterService converterService = buildConverterService(objectMapper);
         RequestIdRequestFilter requestIdRequestFilter = buildRequestIdRequestFilter(generationService);
         DurationRequestFilter durationRequestFilter = buildDurationRequestFilter();
@@ -36,6 +39,7 @@ public class Application {
         DurationResponseFilter durationResponseFilter = buildDurationResponseFilter();
         ResponseLogFilter responseLogFilter = buildResponseLogFilter();
         SuccessController successController = buildSuccessController(successService, converterService);
+        FailureController failureController = buildFailureController(failureService);
         int port = Integer.parseInt(System.getProperty("application.port", "8080"));
         port(port);
         int maxThreads = Integer.parseInt(System.getProperty("application.server.max.threads"));
@@ -50,6 +54,7 @@ public class Application {
         durationResponseFilter.initDurationResponseFilter();
         responseLogFilter.initResponseLogFilter();
         successController.initSuccessController();
+        failureController.initFailureController();
         Runtime.getRuntime().addShutdownHook(new ShutdownHookConfig());
         LOG.info("Application started");
     }
@@ -67,6 +72,10 @@ public class Application {
 
     private static SuccessService buildSuccessService() {
         return new SuccessServiceImpl();
+    }
+
+    private static FailureService buildFailureService() {
+        return new FailureServiceImpl();
     }
 
     private static ConverterService buildConverterService(ObjectMapper objectMapper) {
@@ -98,5 +107,9 @@ public class Application {
         return new SuccessControllerImpl(
                 successService,
                 converterService);
+    }
+
+    private static FailureController buildFailureController(FailureService failureService) {
+        return new FailureControllerImpl(failureService);
     }
 }
