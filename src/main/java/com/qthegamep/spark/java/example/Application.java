@@ -1,8 +1,14 @@
 package com.qthegamep.spark.java.example;
 
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.qthegamep.spark.java.example.adapter.IsoDateJsonModuleAdapter;
 import com.qthegamep.spark.java.example.config.ApplicationConfig;
 import com.qthegamep.spark.java.example.config.LogConfig;
 import com.qthegamep.spark.java.example.exception.ApplicationConfigInitializationException;
+import com.qthegamep.spark.java.example.service.ConverterService;
+import com.qthegamep.spark.java.example.service.ConverterServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -17,6 +23,8 @@ public class Application {
         applicationConfig.init();
         LogConfig logConfig = new LogConfig();
         logConfig.configureLogLevels();
+        ObjectMapper objectMapper = buildObjectMapper();
+        ConverterService converterService = buildConverterService(objectMapper);
         int port = Integer.parseInt(System.getProperty("application.port", "8080"));
         port(port);
         int maxThreads = Integer.parseInt(System.getProperty("application.server.max.threads"));
@@ -26,5 +34,16 @@ public class Application {
         init();
         awaitInitialization();
         LOG.info("Application started");
+    }
+
+    private static ObjectMapper buildObjectMapper() {
+        return new ObjectMapper()
+                .enable(SerializationFeature.INDENT_OUTPUT)
+                .configure(JsonParser.Feature.ALLOW_BACKSLASH_ESCAPING_ANY_CHARACTER, true)
+                .registerModule(new IsoDateJsonModuleAdapter().buildModule());
+    }
+
+    private static ConverterService buildConverterService(ObjectMapper objectMapper) {
+        return new ConverterServiceImpl(objectMapper);
     }
 }
