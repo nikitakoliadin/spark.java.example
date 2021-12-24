@@ -36,6 +36,7 @@ public class Application {
         DurationRequestFilter durationRequestFilter = buildDurationRequestFilter();
         RequestIdResponseFilter requestIdResponseFilter = buildRequestIdResponseFilter();
         DurationResponseFilter durationResponseFilter = buildDurationResponseFilter();
+        ResponseLogFilter responseLogFilter = buildResponseLogFilter();
         SuccessController successController = buildSuccessController(converterService);
         int port = Integer.parseInt(System.getProperty("application.port", "8080"));
         port(port);
@@ -49,6 +50,7 @@ public class Application {
         durationRequestFilter.initDurationRequestFilter();
         requestIdResponseFilter.initRequestIdResponseFilter();
         durationResponseFilter.initDurationResponseFilter();
+        responseLogFilter.initResponseLogFilter();
         successController.initSuccessController();
         Runtime.getRuntime().addShutdownHook(new ShutdownHookConfig());
         LOG.info("Application started");
@@ -83,6 +85,10 @@ public class Application {
 
     private static DurationResponseFilter buildDurationResponseFilter() {
         return new DurationResponseFilterImpl();
+    }
+
+    private static ResponseLogFilter buildResponseLogFilter() {
+        return new ResponseLogFilterImpl();
     }
 
     private static SuccessController buildSuccessController(ConverterService converterService) {
