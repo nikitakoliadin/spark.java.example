@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.qthegamep.spark.java.example.adapter.IsoDateJsonModuleAdapter;
 import com.qthegamep.spark.java.example.config.ApplicationConfig;
 import com.qthegamep.spark.java.example.config.LogConfig;
+import com.qthegamep.spark.java.example.config.ShutdownHookConfig;
 import com.qthegamep.spark.java.example.exception.ApplicationConfigInitializationException;
 import com.qthegamep.spark.java.example.service.ConverterService;
 import com.qthegamep.spark.java.example.service.ConverterServiceImpl;
@@ -33,6 +34,7 @@ public class Application {
         threadPool(maxThreads, minThreads, idleTimeout);
         init();
         awaitInitialization();
+        Runtime.getRuntime().addShutdownHook(new ShutdownHookConfig());
         LOG.info("Application started");
     }
 
