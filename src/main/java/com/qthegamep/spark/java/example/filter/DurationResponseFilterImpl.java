@@ -15,9 +15,10 @@ public class DurationResponseFilterImpl implements DurationResponseFilter {
         after((request, response) -> {
             String requestId = request.attribute(Constants.REQUEST_ID_HEADER);
             String startTime = request.attribute(Constants.START_TIME_HEADER);
-            long duration = System.currentTimeMillis() - Long.parseLong(startTime);
+            String duration = String.valueOf(System.currentTimeMillis() - Long.parseLong(startTime));
             LOG.debug("Duration: {} RequestId: {}", duration, requestId);
-            response.header(Constants.DURATION_HEADER, String.valueOf(duration));
+            request.attribute(Constants.DURATION_HEADER, duration);
+            response.header(Constants.DURATION_HEADER, duration);
         });
     }
 }
