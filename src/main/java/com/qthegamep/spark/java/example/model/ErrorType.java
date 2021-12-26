@@ -2,6 +2,7 @@ package com.qthegamep.spark.java.example.model;
 
 public enum ErrorType {
 
+    INTERNAL_ERROR(500),
     FAILURE_ERROR(501),
     JSON_CONVERTER_ERROR(511);
 
