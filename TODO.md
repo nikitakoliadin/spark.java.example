@@ -1,3 +1,1 @@
 # TODO
-
-* Error handling
