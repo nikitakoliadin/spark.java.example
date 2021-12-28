@@ -15,6 +15,8 @@ import com.qthegamep.spark.java.example.exception.ApplicationConfigInitializatio
 import com.qthegamep.spark.java.example.filter.*;
 import com.qthegamep.spark.java.example.mapper.GeneralExceptionMapper;
 import com.qthegamep.spark.java.example.mapper.GeneralExceptionMapperImpl;
+import com.qthegamep.spark.java.example.mapper.NotFoundExceptionMapper;
+import com.qthegamep.spark.java.example.mapper.NotFoundExceptionMapperImpl;
 import com.qthegamep.spark.java.example.service.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,6 +37,7 @@ public class Application {
         SuccessService successService = buildSuccessService();
         FailureService failureService = buildFailureService();
         ConverterService converterService = buildConverterService(objectMapper);
+        NotFoundExceptionMapper notFoundExceptionMapper = buildNotFoundExceptionMapper(converterService);
         GeneralExceptionMapper generalExceptionMapper = buildGeneralExceptionMapper(converterService);
         RequestIdRequestFilter requestIdRequestFilter = buildRequestIdRequestFilter(generationService);
         DurationRequestFilter durationRequestFilter = buildDurationRequestFilter();
@@ -51,6 +54,7 @@ public class Application {
         threadPool(maxThreads, minThreads, idleTimeout);
         init();
         awaitInitialization();
+        notFoundExceptionMapper.initNotFoundExceptionMapper();
         generalExceptionMapper.initGeneralExceptionMapper();
         requestIdRequestFilter.initRequestIdRequestFilter();
         durationRequestFilter.initDurationRequestFilter();
@@ -84,6 +88,10 @@ public class Application {
 
     private static ConverterService buildConverterService(ObjectMapper objectMapper) {
         return new ConverterServiceImpl(objectMapper);
+    }
+
+    private static NotFoundExceptionMapper buildNotFoundExceptionMapper(ConverterService converterService) {
+        return new NotFoundExceptionMapperImpl(converterService);
     }
 
     private static GeneralExceptionMapper buildGeneralExceptionMapper(ConverterService converterService) {
