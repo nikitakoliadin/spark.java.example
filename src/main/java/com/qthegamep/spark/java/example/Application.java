@@ -13,6 +13,8 @@ import com.qthegamep.spark.java.example.controller.SuccessController;
 import com.qthegamep.spark.java.example.controller.SuccessControllerImpl;
 import com.qthegamep.spark.java.example.exception.ApplicationConfigInitializationException;
 import com.qthegamep.spark.java.example.filter.*;
+import com.qthegamep.spark.java.example.mapper.GeneralExceptionMapper;
+import com.qthegamep.spark.java.example.mapper.GeneralExceptionMapperImpl;
 import com.qthegamep.spark.java.example.service.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,6 +35,7 @@ public class Application {
         SuccessService successService = buildSuccessService();
         FailureService failureService = buildFailureService();
         ConverterService converterService = buildConverterService(objectMapper);
+        GeneralExceptionMapper generalExceptionMapper = buildGeneralExceptionMapper(converterService);
         RequestIdRequestFilter requestIdRequestFilter = buildRequestIdRequestFilter(generationService);
         DurationRequestFilter durationRequestFilter = buildDurationRequestFilter();
         RequestIdResponseFilter requestIdResponseFilter = buildRequestIdResponseFilter();
@@ -48,6 +51,7 @@ public class Application {
         threadPool(maxThreads, minThreads, idleTimeout);
         init();
         awaitInitialization();
+        generalExceptionMapper.initGeneralExceptionMapper();
         requestIdRequestFilter.initRequestIdRequestFilter();
         durationRequestFilter.initDurationRequestFilter();
         requestIdResponseFilter.initRequestIdResponseFilter();
@@ -80,6 +84,10 @@ public class Application {
 
     private static ConverterService buildConverterService(ObjectMapper objectMapper) {
         return new ConverterServiceImpl(objectMapper);
+    }
+
+    private static GeneralExceptionMapper buildGeneralExceptionMapper(ConverterService converterService) {
+        return new GeneralExceptionMapperImpl(converterService);
     }
 
     private static RequestIdRequestFilter buildRequestIdRequestFilter(GenerationService generationService) {
